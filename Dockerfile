@@ -1,43 +1,29 @@
-FROM golang:1.16-alpine AS builder
+FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:1.16 AS builder
 
 # Install Go from golang:1.16-alpine
-COPY --from=golang:1.16-alpine /usr/local/go/ /usr/local/go/
+#COPY --from=golang:1.16-alpine /usr/local/go/ /usr/local/go/
 
 # Set up Go environment variables
 ENV PATH="/usr/local/go/bin:${PATH}"
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
 
 # Set up build arguments
 ARG srcpath="/build/hostpath-provisioner"
 
 # Install git
 RUN apk --no-cache add git; \
-    mkdir -p "$srcpath/amd64"; \
-    mkdir -p "$srcpath/arm64"
+    mkdir -p "$srcpath"
 
-# Copy source code into container $srcpath/amd64
-ADD . "$srcpath/amd64"
+WORKDIR "$srcpath"
 
-# Copy source code into container $srcpath/arm64
-ADD . "$srcpath/arm64"
+ADD . .
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -ldflags="-w -s" -o hostpath-provisioner hostpath-provisioner.go
 
-# Build binaries for arm64 and amd64
-RUN cd "$srcpath/amd64" && \
-    GO111MODULE=on \
-    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -a -ldflags '-extldflags "-static"' -o /hostpath-provisioner-amd64; \
-    cd "$srcpath/arm64" && \
-    GO111MODULE=on \
-    CGO_ENABLED=0 GOOS=linux GOARCH=arm64 \
-    go build -a -ldflags '-extldflags "-static"' -o /hostpath-provisioner-arm64
-
-# Path: Dockerfile
-FROM scratch
-
-# Copy binaries into container
-COPY --from=builder /hostpath-provisioner-* /usr/local/bin/
-
-# Copy startup.sh script into container
-COPY startup.sh /startup.sh
-
-# Set up startup.sh script as entrypoint
-CMD ["/startup.sh"]
+FROM --platform=${TARGETPLATFORM:-linux/amd64} scratch
+WORKDIR "$srcpath"
+COPY --from=builder "$srcpath/hostpath-provisioner" $srcpath/hostpath-provisioner
+ENTRYPOINT ["$srcpath/hostpath-provisioner"]
