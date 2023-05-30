@@ -1,0 +1,15 @@
+apiVersion: v2
+appVersion: "0.0.0"
+version: 0.0.0
+type: application
+name: hostpath-provisioner
+description: hostpath-provisioner is an automatic provisioner creating Persistent Volumes from the hostpath.
+home: https://github.com/djh00t/charts/tree/master/hostpath-provisioner
+sources:
+- https://github.com/djh00t/hostpath-provisioner
+keywords:
+- hostpath
+- storage
+maintainers:
+- email: david@hooton.org
+  name: djh00t

@@ -5,10 +5,8 @@
 ###
 
 echo "Building multiarch binaries..."
-echo `pwd`
-ls -lah
 
-# Get application name from current directory
+# Set application name
 name=hostpath-provisioner
 
 # Make sure upx is installed with apt
