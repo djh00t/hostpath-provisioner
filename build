@@ -5,7 +5,7 @@
 ###
 
 # Get application name from current directory
-name=${PWD##*/}
+name=hostpath-provisioner
 
 # Make sure upx is installed with apt
 if ! command -v upx &> /dev/null
