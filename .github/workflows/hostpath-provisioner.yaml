@@ -6,14 +6,14 @@ concurrency:
 env:
   APP_NAME: hostpath-provisioner
   APP_OWNER: djh00t
-  REGISTRY_IMAGE: ${{ github.repository_owner }}/${{ APP_NAME }}
+  REGISTRY_IMAGE: ${{ github.repository_owner }}/$APP_NAME
 
-name: ${{ APP_NAME }}
-run-name: ${{ github.actor }} is pushing new ${{ APP_NAME }} image to GitHub Actions 🚀
+name: $APP_NAME
+run-name: ${{ github.actor }} is pushing new $APP_NAME image to GitHub Actions 🚀
 on:
   push:
     paths:
-      - ".github/workflows/${{ APP_NAME }}.yml"
+      - ".github/workflows/$APP_NAME.yml"
       - "./**"
 permissions:
   contents: write # needed to write releases
@@ -54,7 +54,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           images: |
-            ghcr.io/${{ env.APP_OWNER }}/${{ APP_NAME }}
+            ghcr.io/${{ env.APP_OWNER }}/$APP_NAME
           tags: |
             type=raw,value=${{ steps.prep.outputs.VERSION }}
             type=raw,value=latest
