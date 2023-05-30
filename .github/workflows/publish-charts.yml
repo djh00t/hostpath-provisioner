@@ -2,8 +2,7 @@ name: Release Chart
 on:
   push:
     branches:
-      - master
-      name: ci     
+      - main
 jobs:
   buildx:
     runs-on: ubuntu-latest
