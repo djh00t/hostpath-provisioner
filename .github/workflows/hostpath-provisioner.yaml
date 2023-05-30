@@ -13,7 +13,7 @@ run-name: ${{ github.actor }} is pushing new ${{ vars.APP_NAME }} image to GitHu
 on:
   push:
     paths:
-      - ".github/workflows/${{ vars.APP_NAME }}.yml"
+      - ".github/workflows/$APP_NAME.yml"
       - "./**"
 permissions:
   contents: write # needed to write releases
