@@ -1,0 +1,29 @@
+---
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+env:
+  APP_NAME: ${{ vars.APP_NAME }}
+  APP_OWNER: ${{ vars.APP_OWNER }}
+  APP_OWNER_EMAIL: ${{ vars.APP_OWNER_EMAIL }}
+  REGISTRY_IMAGE: ${{ github.repository_owner }}/${{ vars.APP_NAME }}
+
+name: build
+run-name: ${{ github.actor }} is pushing new ${{ vars.APP_NAME }} image to GitHub Actions 🚀
+on:
+  push:
+    paths:
+      - ./README.md
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: meeDamian/sync-readme@v1.0.6
+        with:
+            user: ${{ vars.DOCKERHUB_USERNAME }}
+            pass: ${{ secrets.DOCKERHUB_TOKEN }}
+            slug: ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.APP_NAME }}
+            readme: ./README.md
+            description: "A tool to dynamically provision Kubernetes HostPath Volumes in single-node Kubernetes cluster as kind."
