@@ -4,6 +4,10 @@
 ### Adapted from: https://itnext.io/create-go-based-docker-multiarch-images-the-easy-way-74a35cf62c0
 ###
 
+echo "Building multiarch binaries..."
+echo `pwd`
+ls -lah
+
 # Get application name from current directory
 name=hostpath-provisioner
 
