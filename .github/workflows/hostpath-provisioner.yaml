@@ -4,16 +4,16 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  APP_NAME: hostpath-provisioner
-  APP_OWNER: djh00t
-  REGISTRY_IMAGE: ${{ github.repository_owner }}/$APP_NAME
+  APP_NAME: ${{ vars.APP_NAME }}
+  APP_OWNER: ${{ vars.APP_OWNER }}
+  REGISTRY_IMAGE: ${{ github.repository_owner }}/${{ vars.APP_NAME }}
 
-name: $APP_NAME
-run-name: ${{ github.actor }} is pushing new $APP_NAME image to GitHub Actions 🚀
+name: ${{ vars.APP_NAME }}
+run-name: ${{ github.actor }} is pushing new ${{ vars.APP_NAME }} image to GitHub Actions 🚀
 on:
   push:
     paths:
-      - ".github/workflows/$APP_NAME.yml"
+      - ".github/workflows/${{ vars.APP_NAME }}.yml"
       - "./**"
 permissions:
   contents: write # needed to write releases
@@ -54,7 +54,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           images: |
-            ghcr.io/${{ env.APP_OWNER }}/$APP_NAME
+            ghcr.io/${{ env.APP_OWNER }}/${{ vars.APP_NAME }}
           tags: |
             type=raw,value=${{ steps.prep.outputs.VERSION }}
             type=raw,value=latest
@@ -66,4 +66,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           file: ./Dockerfile
-          tags: ghcr.io/${{ env.APP_OWNER }}/${{ env.APP }}:latest
+          tags: ghcr.io/${{ env.APP_OWNER }}/${{ env.APP_NAME }}:latest
