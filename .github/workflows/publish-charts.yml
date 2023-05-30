@@ -3,29 +3,32 @@ on:
   push:
     branches:
       - master
+      name: ci     
 jobs:
-  release:
-    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
-    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
-    permissions:
-      contents: write
+  buildx:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+
+      - name: Checkout helm-charts
+        uses: actions/checkout@v2
         with:
-          fetch-depth: 0
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-      - name: Install Helm
-        uses: azure/setup-helm@v3
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
+          repository: ${{ vars.APP_OWNER }}/${{ vars.APP_NAME }}
+          ref: refs/heads/main
+          path: charts
+          token: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Publish the Helm chart
+        id: publish-chart
+        uses: moikot/chart-publish-action@v1
         with:
-          charts_dir: chart
-          config: cr.yaml
-        env:
-          GITHUB_TOKEN: "${{ secrets.GHCR_TOKEN }}"
-          CR_TOKEN: "${{ secrets.GHCR_TOKEN }}"
+          charts_dir: "charts"
+          charts_url: "https://${{ vars.APP_OWNER }}.github.io/charts"
+
+      - name: Commit and push helm-charts
+        uses: EndBug/add-and-commit@v6
+        with:
+          author_name: ${{ vars.APP_OWNER }}
+          author_email: ${{ vars.APP_OWNER_EMAIL }}
+          branch: main
+          cwd: charts
+          message: "Commit chart ${{ steps.publish-chart.outputs.chart }}"

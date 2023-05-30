@@ -6,6 +6,7 @@ concurrency:
 env:
   APP_NAME: ${{ vars.APP_NAME }}
   APP_OWNER: ${{ vars.APP_OWNER }}
+  APP_OWNER_EMAIL: ${{ vars.APP_OWNER_EMAIL }}
   REGISTRY_IMAGE: ${{ github.repository_owner }}/${{ vars.APP_NAME }}
 
 name: build
