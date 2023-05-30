@@ -39,8 +39,8 @@ jobs:
           username: ${{ vars.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
       - name: Login to Docker Hub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v1
+        # if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -67,16 +67,14 @@ jobs:
           # Docker tags based on the following events/attributes
           tags: |
             type=raw,value=${{ steps.prep.outputs.VERSION }}
-            type=raw,value=latest
             type=schedule
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
             type=sha
             
-      - name: Publish base image
+      - name: Build and publish image
+        id: docker_build
         uses: docker/build-push-action@v4
         with:
           builder: ${{ steps.buildx.outputs.name }}
