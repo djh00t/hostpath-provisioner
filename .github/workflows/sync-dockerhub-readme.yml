@@ -26,5 +26,5 @@ jobs:
             user: ${{ vars.DOCKERHUB_USERNAME }}
             pass: ${{ secrets.DOCKERHUB_TOKEN }}
             slug: ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.APP_NAME }}
-            readme: ./README.md
+            readme: "./README.md"
             description: "A tool to dynamically provision Kubernetes HostPath Volumes in single-node Kubernetes cluster as kind."
