@@ -14,7 +14,8 @@ run-name: ${{ github.actor }} is pushing new ${{ vars.APP_NAME }} README.md to G
 on:
   push:
     paths:
-      - ./README.md
+      - ".github/workflows/$APP_NAME.yml"
+      - "./README.md"
 jobs:
   release:
     runs-on: ubuntu-latest
