@@ -13,6 +13,7 @@ It is based on [kubernetes-sigs/sig-storage-lib-external-provisioner/hostpath-pr
 helm repo add rimusz https://charts.rimusz.net
 helm repo update
 helm upgrade --install hostpath-provisioner --namespace kube-system rimusz/hostpath-provisioner
+
 ```
 
 ```bash
