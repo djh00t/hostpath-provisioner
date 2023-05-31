@@ -9,8 +9,8 @@ env:
   APP_OWNER_EMAIL: ${{ vars.APP_OWNER_EMAIL }}
   REGISTRY_IMAGE: ${{ github.repository_owner }}/${{ vars.APP_NAME }}
 
-name: build
-run-name: ${{ github.actor }} is pushing new ${{ vars.APP_NAME }} image to GitHub Actions 🚀
+name: publish-readme
+run-name: ${{ github.actor }} is pushing new ${{ vars.APP_NAME }} README.md to GitHub Actions 🚀
 on:
   push:
     paths:
